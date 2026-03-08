@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owlia - 管理者ダッシュボード</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #1a6b7c;
+      --teal-light: #2a9bb0;
+      --teal-pale: #e0f5f5;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --white: #ffffff;
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-heading: 'Zen Maru Gothic', 'Noto Sans JP', sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); color: var(--gray-700); background: linear-gradient(135deg, #f0f8fa, #e8f4f7); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    button { font-family: var(--font-body); cursor: pointer; border: none; background: none; }
+
+    /* Header */
+    .admin-header {
+      background: linear-gradient(135deg, var(--teal), var(--teal-light));
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .admin-header-left { display: flex; align-items: center; gap: 12px; }
+    .admin-header-logo { font-family: var(--font-heading); font-weight: 900; font-size: 1.1rem; color: var(--white); display: flex; align-items: center; gap: 8px; }
+    .admin-header-title { color: rgba(255,255,255,0.85); font-size: 0.85rem; font-weight: 500; }
+    .admin-header-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.2); }
+    .admin-back {
+      padding: 8px 20px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.15);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .admin-back:hover { background: rgba(255,255,255,0.25); }
+
+    /* Main */
+    .admin-main { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+    /* Login */
+    .admin-login {
+      max-width: 400px;
+      margin: 80px auto;
+      text-align: center;
+      background: var(--white);
+      border-radius: 22px;
+      padding: 48px 36px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .admin-login-icon { font-size: 56px; margin-bottom: 16px; }
+    .admin-login h2 { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 900; color: var(--gray-800); margin-bottom: 8px; }
+    .admin-login p { font-size: 0.82rem; color: var(--gray-400); line-height: 1.7; margin-bottom: 20px; }
+    .admin-login input {
+      border: 1.5px solid var(--teal-pale);
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--gray-800);
+      outline: none;
+      background: var(--gray-50);
+      width: 100%;
+      max-width: 260px;
+      text-align: center;
+    }
+    .admin-login input:focus { border-color: var(--teal-light); }
+    .admin-login-err { color: #e55; font-size: 12px; min-height: 20px; margin-top: 8px; }
+    .admin-login-btn {
+      margin-top: 16px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-light));
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 36px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(26,107,124,0.3);
+    }
+    .admin-login-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,107,124,0.4); }
+
+    /* Dashboard */
+    .admin-dash { display: none; }
+    .admin-dash.show { display: block; }
+
+    .admin-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .admin-toolbar-left { display: flex; align-items: center; gap: 12px; }
+    .admin-toolbar h2 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 900; color: var(--gray-800); }
+    .admin-count {
+      background: var(--teal);
+      color: var(--white);
+      border-radius: 9999px;
+      padding: 2px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .admin-logout {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .admin-logout:hover { color: var(--gray-700); }
+
+    /* Tab bar */
+    .admin-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--white);
+      padding: 4px;
+      border-radius: 9999px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 24px;
+      max-width: 400px;
+    }
+    .admin-tab {
+      flex: 1;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gray-400);
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .admin-tab:hover { color: var(--teal); }
+    .admin-tab.active { background: var(--teal); color: var(--white); box-shadow: 0 2px 8px rgba(26,107,124,0.25); }
+
+    /* Panels */
+    .admin-panel { display: none; }
+    .admin-panel.show { display: block; }
+
+    /* Request list */
+    .admin-requests { display: flex; flex-direction: column; gap: 12px; }
+    .admin-empty {
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.9rem;
+      padding: 48px 20px;
+      background: var(--white);
+      border-radius: 16px;
+    }
+    .admin-empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+    .admin-req-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 18px 48px 18px 20px;
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .admin-req-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .admin-req-msg { font-size: 0.9rem; color: var(--gray-800); font-weight: 500; line-height: 1.7; }
+    .admin-req-time { font-size: 0.75rem; color: var(--gray-400); margin-top: 6px; }
+    .admin-req-del {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--gray-50);
+      color: var(--gray-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .admin-req-del:hover { background: #fee; color: #e55; }
+
+    /* Click stats */
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .admin-stat-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      border: 1px solid var(--gray-100);
+    }
+    .admin-stat-name {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+      text-transform: capitalize;
+    }
+    .admin-stat-count {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--teal);
+    }
+    .admin-stat-label { font-size: 0.7rem; color: var(--gray-400); margin-top: 2px; }
+
+    .admin-click-history {
+      margin-top: 24px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    .admin-click-history h3 {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      padding: 16px 20px 12px;
+    }
+    .admin-click-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .admin-click-table th {
+      text-align: left;
+      padding: 10px 16px;
+      background: var(--gray-50);
+      color: var(--gray-500);
+      font-weight: 600;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .admin-click-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-700);
+    }
+    .admin-click-table tr:last-child td { border-bottom: none; }
+
+    .admin-stats-empty {
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+      padding: 48px 20px;
+      background: var(--white);
+      border-radius: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .admin-header { padding: 16px 20px; }
+      .admin-main { padding: 20px 16px; }
+      .admin-login { margin: 40px auto; padding: 36px 24px; }
+      .admin-stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <div class="admin-header-logo">&#x1F989; Owlia</div>
+      <div class="admin-header-sep"></div>
+      <div class="admin-header-title">管理者ダッシュボード</div>
+    </div>
+    <a href="index.html" class="admin-back">&#x2190; トップページに戻る</a>
+  </div>
+
+  <div class="admin-main">
+    <!-- Login screen -->
+    <div class="admin-login" id="loginScreen">
+      <div class="admin-login-icon">&#x1F510;</div>
+      <h2>管理者ログイン</h2>
+      <p>ユーザーからの要望一覧と<br>クリック統計を確認できます</p>
+      <input type="password" id="pwInput" placeholder="パスワードを入力">
+      <div class="admin-login-err" id="loginErr"></div>
+      <button class="admin-login-btn" id="loginBtn">ログイン</button>
+    </div>
+
+    <!-- Dashboard (hidden until login) -->
+    <div class="admin-dash" id="dashboard">
+      <div class="admin-toolbar">
+        <div class="admin-toolbar-left">
+          <h2>&#x1F4CB; 管理ダッシュボード</h2>
+          <span class="admin-count" id="reqCount">0件</span>
+        </div>
+        <button class="admin-logout" id="logoutBtn">&#x1F6AA; ログアウト</button>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-panel="requests">&#x1F4AC; ユーザー要望</button>
+        <button class="admin-tab" data-panel="clicks">&#x1F4CA; クリック統計</button>
+      </div>
+
+      <!-- Requests panel -->
+      <div class="admin-panel show" id="panelRequests">
+        <div class="admin-requests" id="requestsList"></div>
+      </div>
+
+      <!-- Click stats panel -->
+      <div class="admin-panel" id="panelClicks">
+        <div id="clickStatsContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var ADMIN_PASS = 'owlia-admin';
+
+      var loginScreen = document.getElementById('loginScreen');
+      var dashboard = document.getElementById('dashboard');
+      var pwInput = document.getElementById('pwInput');
+      var loginErr = document.getElementById('loginErr');
+      var loginBtn = document.getElementById('loginBtn');
+      var logoutBtn = document.getElementById('logoutBtn');
+      var reqCountEl = document.getElementById('reqCount');
+      var requestsList = document.getElementById('requestsList');
+      var clickStatsContent = document.getElementById('clickStatsContent');
+      var tabBtns = document.querySelectorAll('.admin-tab');
+      var panels = {
+        requests: document.getElementById('panelRequests'),
+        clicks: document.getElementById('panelClicks'),
+      };
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      // --- Login ---
+      function login() {
+        if (pwInput.value === ADMIN_PASS) {
+          loginScreen.style.display = 'none';
+          dashboard.classList.add('show');
+          loginErr.textContent = '';
+          renderRequests();
+          renderClickStats();
+        } else {
+          loginErr.textContent = 'パスワードが違います';
+        }
+      }
+
+      loginBtn.addEventListener('click', login);
+      pwInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') login();
+      });
+
+      logoutBtn.addEventListener('click', function () {
+        dashboard.classList.remove('show');
+        loginScreen.style.display = '';
+        pwInput.value = '';
+      });
+
+      // --- Tabs ---
+      tabBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          tabBtns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          Object.values(panels).forEach(function (p) { p.classList.remove('show'); });
+          var target = panels[btn.dataset.panel];
+          if (target) target.classList.add('show');
+
+          if (btn.dataset.panel === 'clicks') renderClickStats();
+        });
+      });
+
+      // --- Requests ---
+      function getRequests() {
+        try { return JSON.parse(localStorage.getItem('owlia_requests') || '[]'); }
+        catch (e) { return []; }
+      }
+
+      function saveRequests(reqs) {
+        try { localStorage.setItem('owlia_requests', JSON.stringify(reqs)); }
+        catch (e) {}
+      }
+
+      function deleteRequest(id) {
+        var reqs = getRequests().filter(function (r) { return r.id !== id; });
+        saveRequests(reqs);
+        renderRequests();
+      }
+
+      function renderRequests() {
+        var reqs = getRequests();
+        reqCountEl.textContent = reqs.length + '件';
+
+        if (reqs.length === 0) {
+          requestsList.innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">&#x1F989;</div>まだ要望はありません</div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < reqs.length; i++) {
+          var r = reqs[i];
+          html += '<div class="admin-req-card" data-id="' + escapeHtml(r.id) + '">' +
+            '<div class="admin-req-msg">「' + escapeHtml(r.message) + '」</div>' +
+            '<div class="admin-req-time">&#x1F554; ' + escapeHtml(r.label) + '</div>' +
+            '<button class="admin-req-del" title="削除">&#x2715;</button>' +
+            '</div>';
+        }
+        requestsList.innerHTML = html;
+
+        requestsList.querySelectorAll('.admin-req-del').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.closest('.admin-req-card').dataset.id;
+            deleteRequest(id);
+          });
+        });
+      }
+
+      // --- Click Stats ---
+      function renderClickStats() {
+        try {
+          var data = JSON.parse(localStorage.getItem('owlia_clicks') || '{}');
+          var apps = Object.keys(data);
+
+          if (apps.length === 0) {
+            clickStatsContent.innerHTML = '<div class="admin-stats-empty"><div class="admin-empty-icon">&#x1F4CA;</div>まだクリックデータはありません</div>';
+            return;
+          }
+
+          // Summary cards
+          var html = '<div class="admin-stats-grid">';
+          var totalClicks = 0;
+          for (var i = 0; i < apps.length; i++) {
+            var count = data[apps[i]].count || 0;
+            totalClicks += count;
+            html += '<div class="admin-stat-card">' +
+              '<div class="admin-stat-name">' + escapeHtml(apps[i]) + '</div>' +
+              '<div class="admin-stat-count">' + count + '</div>' +
+              '<div class="admin-stat-label">クリック</div>' +
+              '</div>';
+          }
+          html += '</div>';
+
+          // Click history table
+          var allClicks = [];
+          for (var i = 0; i < apps.length; i++) {
+            var clicks = data[apps[i]].clicks || [];
+            for (var j = 0; j < clicks.length; j++) {
+              allClicks.push({ app: apps[i], ts: clicks[j].ts, label: clicks[j].label });
+            }
+          }
+          allClicks.sort(function (a, b) { return b.ts - a.ts; });
+
+          if (allClicks.length > 0) {
+            html += '<div class="admin-click-history">' +
+              '<h3>&#x1F554; クリック履歴（最新50件）</h3>' +
+              '<table class="admin-click-table"><thead><tr><th>アプリ</th><th>日時</th></tr></thead><tbody>';
+            var limit = Math.min(allClicks.length, 50);
+            for (var i = 0; i < limit; i++) {
+              html += '<tr><td>' + escapeHtml(allClicks[i].app) + '</td><td>' + escapeHtml(allClicks[i].label) + '</td></tr>';
+            }
+            html += '</tbody></table></div>';
+          }
+
+          clickStatsContent.innerHTML = html;
+        } catch (e) {
+          clickStatsContent.innerHTML = '<div class="admin-stats-empty">データの読み取りに失敗しました</div>';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

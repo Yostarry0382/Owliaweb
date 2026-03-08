@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owlia - NIT社内生成AIプラットフォーム</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Mobile menu overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="menuClose" aria-label="閉じる">&times;</button>
+    <a href="#apps">アプリ一覧</a>
+    <a href="#comparison">Owliaの強み</a>
+    <a href="#steps">利用の流れ</a>
+    <a href="#detail">詳しい使い方</a>
+    <a href="#roles">職種別おすすめ</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <nav class="nav" id="nav">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo"><span>&#x1F989;</span> Owlia</a>
+        <div class="nav-links">
+          <a href="#apps">アプリ一覧</a>
+          <a href="#comparison">Owliaの強み</a>
+          <a href="#steps">利用の流れ</a>
+          <a href="#detail">詳しい使い方</a>
+          <a href="#roles">職種別おすすめ</a>
+        </div>
+        <button class="nav-menu-btn" id="hamburger" aria-label="メニュー">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <svg class="nav-wave" viewBox="0 0 1440 20" preserveAspectRatio="none">
+        <path d="M0,14 C80,6 160,18 240,10 C320,2 400,16 480,10 C560,4 640,18 720,12 C800,6 880,16 960,10 C1040,4 1120,18 1200,12 C1280,6 1360,16 1440,10" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </nav>
+
+    <!-- Hero content -->
+    <div class="hero-center">
+      <h1 class="hero-title">
+        <span class="hero-title-sub">NIT社内生成AIプラットフォーム</span>
+        <span class="hero-title-main" id="heroTitleMain">Owlia</span>
+        <span class="hero-title-catch">あなたに寄り添う愉快な仲間たち</span>
+      </h1>
+
+      <div class="hero-scene" id="heroScene">
+        <div class="hero-campfire">
+          <img src="docs/object/e2fce12d-9b87-4bb6-a50a-01f98367b7c4.png" alt="Owlia キャンプファイヤー" class="hero-campfire-img">
+        </div>
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_07.png" alt="Sprite" class="hero-owl hero-owl-1">
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_06.png" alt="Portal" class="hero-owl hero-owl-2">
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_25_03.png" alt="Grimoire" class="hero-owl hero-owl-3">
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_23_59.png" alt="COBOL" class="hero-owl hero-owl-4">
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_02.png" alt="Chronicle" class="hero-owl hero-owl-5">
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_04.png" alt="Plugins" class="hero-owl hero-owl-6">
+        <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_09.png" alt="Owlia" class="hero-owl hero-owl-7">
+      </div>
+
+    </div>
+
+
+    <svg class="wave-divider" viewBox="0 0 1440 60" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;z-index:12;">
+      <path d="M0,30 C360,55 720,5 1080,35 C1260,48 1380,20 1440,30 L1440,60 L0,60 Z" fill="#ffffff"/>
+    </svg>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="comp" id="comparison">
+    <div class="container">
+      <div class="section-header fi">
+        <span class="section-label">&#x2696;&#xFE0F; COMPARISON</span>
+        <h2 class="section-title">一般AIとOwlia、何が違う？</h2>
+        <p class="section-subtitle">外部の生成AIは便利だけど、社内業務には限界があります。</p>
+      </div>
+      <div class="comp-grid fi">
+        <div class="comp-card general">
+          <div class="comp-card-title">&#x1F310; 一般的なAI</div>
+          <div class="comp-card-desc">Copilot / ChatGPT / MateChat など</div>
+          <div class="comp-row">
+            <div class="comp-row-label">KNOWLEDGE</div>
+            <div class="comp-row-val">インターネット上の一般知識のみ。社内用語を誤解しがち。</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">MEMORY</div>
+            <div class="comp-row-val">チャットをまたぐと内容をすべて忘れる。</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">FEATURES</div>
+            <div class="comp-row-val">主にテキストチャットのみ。</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">SECURITY</div>
+            <div class="comp-row-val">社外サーバーへ送信。機密情報に不安。</div>
+          </div>
+        </div>
+        <div class="comp-vs">
+          <div class="comp-vs-badge">VS</div>
+        </div>
+        <div class="comp-card owlia">
+          <div class="comp-recommend">&#x1F451; おすすめ</div>
+          <div class="comp-card-title">&#x1F989; Owlia</div>
+          <div class="comp-card-desc">NIT社内専用AIプラットフォーム</div>
+          <div class="comp-row">
+            <div class="comp-row-label">KNOWLEDGE</div>
+            <div class="comp-row-val">社内RAGで独自資料・用語を理解。NIT特有の回答。</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">MEMORY</div>
+            <div class="comp-row-val">チャット跨ぎでも記憶が持続。連続的な対話。</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">FEATURES</div>
+            <div class="comp-row-val">音声・COBOL支援・タスク管理・API連携。</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-row-label">SECURITY</div>
+            <div class="comp-row-val">社内クローズド環境。機密情報も安心。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg class="wave-divider" viewBox="0 0 1440 80" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;z-index:3;">
+      <path d="M0,30 C320,70 640,10 960,50 C1200,70 1360,30 1440,40 L1440,80 L0,80 Z" fill="var(--teal-bg)"/>
+    </svg>
+  </section>
+
+  <!-- MARQUEE BAND -->
+  <div class="marquee-band">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="marquee-text">Owlia-Sprite</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Portal</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Grimoire</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-COBOL</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Chronicle</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Plugins</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Sprite</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Portal</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Grimoire</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-COBOL</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Chronicle</span><span class="marquee-sep">&#x2726;</span>
+      <span class="marquee-text">Owlia-Plugins</span><span class="marquee-sep">&#x2726;</span>
+    </div>
+  </div>
+
+  <!-- APPS -->
+  <section class="apps" id="apps">
+    <div class="container">
+      <div class="section-header fi">
+        <span class="section-label">&#x1F4E6; APPS</span>
+        <h2 class="section-title">やりたいことから選ぶ</h2>
+        <p class="section-subtitle">Owliaには目的に合わせた6つのアプリ。</p>
+      </div>
+      <div class="apps-filters fi">
+        <button class="apps-filter active" data-filter="all">すべて</button>
+        <button class="apps-filter" data-filter="available">利用可能</button>
+        <button class="apps-filter" data-filter="dev">開発向け</button>
+        <button class="apps-filter" data-filter="general">全職種向け</button>
+        <button class="apps-filter" data-filter="coming">Coming Soon</button>
+      </div>
+      <div class="apps-grid" id="appGrid">
+        <!-- Sprite -->
+        <div class="app-card fi" data-cat="available general">
+          <div class="app-card-top">
+            <div class="app-card-icon"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_07.png" alt="Sprite"></div>
+            <span class="badge badge-ok">&#x2705; 利用可能</span>
+          </div>
+          <div class="app-card-name">Owlia-Sprite</div>
+          <div class="app-card-role">すべての入り口</div>
+          <div class="app-card-desc">デスクトップ常駐ランチャー。ショートカット一発ですべてのOwlia機能にアクセス。</div>
+          <div class="app-card-tags">
+            <span class="app-tag">Ctrl+O起動</span>
+            <span class="app-tag">音声入力</span>
+            <span class="app-tag">キャプチャ</span>
+            <span class="app-tag">タスク登録</span>
+          </div>
+          <div class="app-card-cta"><a href="go.html?app=sprite&url=#" class="btn btn-teal btn-sm">ダウンロード</a></div>
+        </div>
+        <!-- Portal -->
+        <div class="app-card fi fi-d1" data-cat="available general">
+          <div class="app-card-top">
+            <div class="app-card-icon"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_06.png" alt="Portal"></div>
+            <span class="badge badge-ok">&#x2705; 利用可能</span>
+          </div>
+          <div class="app-card-name">Owlia-Portal</div>
+          <div class="app-card-role">全アプリのエントランス</div>
+          <div class="app-card-desc">メインチャット基地。RAGドキュメント一括設定・各アプリへのナビゲーション。</div>
+          <div class="app-card-tags">
+            <span class="app-tag">AIチャット</span>
+            <span class="app-tag">RAG設定</span>
+            <span class="app-tag">ナビ</span>
+            <span class="app-tag">ファイル学習</span>
+          </div>
+          <div class="app-card-cta"><a href="go.html?app=portal&url=#" class="btn btn-teal btn-sm">ログイン</a></div>
+        </div>
+        <!-- Grimoire -->
+        <div class="app-card fi fi-d2" data-cat="available dev">
+          <div class="app-card-top">
+            <div class="app-card-icon"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_25_03.png" alt="Grimoire"></div>
+            <span class="badge badge-ok">&#x2705; 利用可能</span>
+          </div>
+          <div class="app-card-name">Owlia-Grimoire</div>
+          <div class="app-card-role">開発者向けAPI</div>
+          <div class="app-card-desc">アプリ開発でOwlia APIが使える。開発環境へのAI組み込みを実現。</div>
+          <div class="app-card-tags">
+            <span class="app-tag">API提供</span>
+            <span class="app-tag">AI組み込み</span>
+            <span class="app-tag">開発連携</span>
+          </div>
+          <div class="app-card-cta"><a href="go.html?app=grimoire&url=#" class="btn btn-teal btn-sm">ドキュメント</a></div>
+        </div>
+        <!-- COBOL -->
+        <div class="app-card soon fi fi-d3" data-cat="coming dev">
+          <div class="app-card-top">
+            <div class="app-card-icon"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_23_59.png" alt="COBOL"></div>
+            <span class="badge badge-soon">&#x23F3; Coming Soon</span>
+          </div>
+          <div class="app-card-name">Owlia-COBOL</div>
+          <div class="app-card-role">COBOL開発AI支援</div>
+          <div class="app-card-desc">VSCode風モダン画面で日本語指示からCOBOLコーディング。AI校正も。</div>
+          <div class="app-card-tags">
+            <span class="app-tag">モダンUI</span>
+            <span class="app-tag">日本語指示</span>
+            <span class="app-tag">AI校正</span>
+          </div>
+          <div class="app-card-cta"><button class="btn btn-disabled btn-sm">準備中</button></div>
+        </div>
+        <!-- Chronicle -->
+        <div class="app-card soon fi fi-d4" data-cat="coming general">
+          <div class="app-card-top">
+            <div class="app-card-icon"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_02.png" alt="Chronicle"></div>
+            <span class="badge badge-soon">&#x23F3; Coming Soon</span>
+          </div>
+          <div class="app-card-name">Owlia-Chronicle</div>
+          <div class="app-card-role">AIタスク管理・議事録</div>
+          <div class="app-card-desc">タスク管理・議事録自動要約・スケジュール管理をAIがサポート。</div>
+          <div class="app-card-tags">
+            <span class="app-tag">タスク管理</span>
+            <span class="app-tag">議事録</span>
+            <span class="app-tag">スケジュール</span>
+          </div>
+          <div class="app-card-cta"><button class="btn btn-disabled btn-sm">準備中</button></div>
+        </div>
+        <!-- Plugins -->
+        <div class="app-card soon fi fi-d5" data-cat="coming dev">
+          <div class="app-card-top">
+            <div class="app-card-icon"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_04.png" alt="Plugins"></div>
+            <span class="badge badge-soon">&#x23F3; Coming Soon</span>
+          </div>
+          <div class="app-card-name">Owlia-Plugins</div>
+          <div class="app-card-role">開発環境AI統合</div>
+          <div class="app-card-desc">VSCode等にOwlia AIを直接組み込み。コーディング中にAI支援。</div>
+          <div class="app-card-tags">
+            <span class="app-tag">VSCode</span>
+            <span class="app-tag">AI統合</span>
+            <span class="app-tag">シームレス</span>
+          </div>
+          <div class="app-card-cta"><button class="btn btn-disabled btn-sm">準備中</button></div>
+        </div>
+      </div>
+    </div>
+    <svg class="wave-divider" viewBox="0 0 1440 80" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;z-index:3;">
+      <path d="M0,50 C480,10 960,70 1440,30 L1440,80 L0,80 Z" fill="var(--orange-bg)"/>
+    </svg>
+  </section>
+
+  <!-- STEPS -->
+  <section class="steps" id="steps">
+    <div class="container">
+      <div class="section-header fi">
+        <span class="section-label">&#x1F680; HOW TO START</span>
+        <h2 class="section-title">かんたん3ステップで始める</h2>
+        <p class="section-subtitle">最短2分でOwliaが使えるようになります。</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step fi">
+          <div class="step-num">1</div>
+          <div class="step-emoji">&#x1F4E5;</div>
+          <div class="step-title">Spriteをインストール</div>
+          <div class="step-desc">exeファイルをダウンロードして実行するだけ。環境起動時に自動で常駐します。</div>
+          <a href="go.html?app=sprite&url=#" class="btn btn-orange btn-sm">ダウンロード</a>
+        </div>
+        <div class="step fi fi-d1">
+          <div class="step-num">2</div>
+          <div class="step-emoji">&#x1F511;</div>
+          <div class="step-title">Portalにログイン</div>
+          <div class="step-desc">Ctrl+O またはふきだしアイコンからPortalへ。IDは氏名コードです。</div>
+          <div class="step-hint">初回PW: <code>12345678</code></div>
+        </div>
+        <div class="step fi fi-d2">
+          <div class="step-num">3</div>
+          <div class="step-emoji">&#x2705;</div>
+          <div class="step-title">RAG設定 &amp; 利用開始</div>
+          <div class="step-desc">社内ドキュメントを一括設定して、各アプリを使い始めましょう。</div>
+          <a href="#apps" class="btn btn-white btn-sm">アプリを見る</a>
+        </div>
+      </div>
+    </div>
+    <svg class="wave-divider" viewBox="0 0 1440 80" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;z-index:3;">
+      <path d="M0,40 C360,0 720,70 1080,30 C1260,10 1380,40 1440,30 L1440,80 L0,80 Z" fill="#ffffff"/>
+    </svg>
+  </section>
+
+  <!-- ROLES -->
+  <section class="roles" id="roles">
+    <div class="container">
+      <div class="section-header fi">
+        <span class="section-label">&#x1F464; FOR YOU</span>
+        <h2 class="section-title">あなたの職種に合うアプリは？</h2>
+        <p class="section-subtitle">職種別のおすすめアプリをご紹介。</p>
+      </div>
+      <div class="roles-grid">
+        <div class="role-card fi">
+          <div class="role-emoji">&#x1F468;&#x200D;&#x1F4BB;</div>
+          <div class="role-title">開発職</div>
+          <div class="role-desc">コーディング支援からAPI連携まで、開発全体をAIが加速。</div>
+          <div class="role-apps">
+            <div class="role-app"><span>&#x1F4BB;</span> Sprite - 常駐ランチャー</div>
+            <div class="role-app"><span>&#x1F4DA;</span> Grimoire - API連携</div>
+            <div class="role-app"><span>&#x1F5A5;&#xFE0F;</span> COBOL - COBOL支援</div>
+            <div class="role-app"><span>&#x1F9E9;</span> Plugins - 開発環境統合</div>
+          </div>
+        </div>
+        <div class="role-card fi fi-d1">
+          <div class="role-emoji">&#x1F469;&#x200D;&#x1F4BC;</div>
+          <div class="role-title">事務職</div>
+          <div class="role-desc">資料検索・要約・タスク管理で日常業務の効率を大幅アップ。</div>
+          <div class="role-apps">
+            <div class="role-app"><span>&#x1F4BB;</span> Sprite - 常駐ランチャー</div>
+            <div class="role-app"><span>&#x1F30D;</span> Portal - AIチャット・RAG</div>
+            <div class="role-app"><span>&#x1F4C5;</span> Chronicle - タスク・議事録</div>
+          </div>
+        </div>
+        <div class="role-card fi fi-d2">
+          <div class="role-emoji">&#x1F468;&#x200D;&#x1F4BC;</div>
+          <div class="role-title">マネジメント職</div>
+          <div class="role-desc">情報収集・議事録管理をAIでスピーディに。</div>
+          <div class="role-apps">
+            <div class="role-app"><span>&#x1F4BB;</span> Sprite - 常駐ランチャー</div>
+            <div class="role-app"><span>&#x1F30D;</span> Portal - AIチャット・RAG</div>
+            <div class="role-app"><span>&#x1F4C5;</span> Chronicle - 議事録要約</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg class="wave-divider" viewBox="0 0 1440 80" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;z-index:3;">
+      <path d="M0,50 C480,10 960,70 1440,30 L1440,80 L0,80 Z" fill="var(--blue-bg)"/>
+    </svg>
+  </section>
+
+  <!-- APP DETAIL -->
+  <section class="detail" id="detail">
+    <div class="container">
+      <div class="section-header fi">
+        <span class="section-label">&#x1F50D; DETAILS</span>
+        <h2 class="section-title">各アプリの詳しい使い方</h2>
+        <p class="section-subtitle">タブで切り替えて詳細を確認。</p>
+      </div>
+      <div class="detail-tabs fi" role="tablist">
+        <button class="detail-tab active" data-tab="sprite" role="tab">Sprite</button>
+        <button class="detail-tab" data-tab="portal" role="tab">Portal</button>
+        <button class="detail-tab" data-tab="cobol" role="tab">COBOL</button>
+        <button class="detail-tab" data-tab="grimoire" role="tab">Grimoire</button>
+        <button class="detail-tab" data-tab="chronicle" role="tab">Chronicle</button>
+        <button class="detail-tab" data-tab="plugins" role="tab">Plugins</button>
+      </div>
+
+      <!-- Sprite -->
+      <div class="detail-panel active" id="p-sprite">
+        <div class="detail-content">
+          <div class="detail-info">
+            <h3>&#x1F4BB; Owlia-Sprite</h3>
+            <span class="badge badge-ok" style="margin-bottom:12px">利用可能</span>
+            <div class="detail-role">すべての入り口 - デスクトップ常駐ランチャー</div>
+            <div class="detail-desc">Spriteはデスクトップに常駐するOwliaの入り口。ショートカットキー一発で起動し、すべてのOwlia機能に即座にアクセス。一度インストールすればPC起動時に自動常駐。</div>
+            <div class="detail-features">
+              <div class="detail-feat"><span class="ck">&#x2714;</span> Ctrl+O でどこからでも即起動</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> 音声入力で手を止めずに質問</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> テキスト選択で右クリックAI処理</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> スクリーンキャプチャ送信</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> タスク登録 &amp; 簡易チャット</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> Portalへのワンクリックアクセス</div>
+            </div>
+            <a href="go.html?app=sprite&url=#" class="btn btn-teal">Spriteをダウンロード</a>
+          </div>
+          <div>
+            <div class="detail-character">
+              <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_07.png" alt="Sprite キャラクター">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portal -->
+      <div class="detail-panel" id="p-portal">
+        <div class="detail-content">
+          <div class="detail-info">
+            <h3>&#x1F30D; Owlia-Portal</h3>
+            <span class="badge badge-ok" style="margin-bottom:12px">利用可能</span>
+            <div class="detail-role">全アプリのエントランス・メインチャット基地</div>
+            <div class="detail-desc">Portalは中心となるWebアプリ。AIとの対話、社内ドキュメントのRAG設定、各アプリへのナビゲーションをすべてここで。ファイルサーバーの一括学習でチームの知識を即座にAIに共有。</div>
+            <div class="detail-features">
+              <div class="detail-feat"><span class="ck">&#x2714;</span> 社内RAG対応AIチャット</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> ドキュメント一括設定・学習</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> ファイルサーバー一括学習</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> 各アプリへのナビゲーション</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> チャット跨ぎの記憶保持</div>
+            </div>
+            <div class="step-hint" style="margin-bottom:16px">ID: 氏名コード / 初回PW: <code>12345678</code></div>
+            <a href="go.html?app=portal&url=#" class="btn btn-teal">Portalにログイン</a>
+          </div>
+          <div>
+            <div class="detail-character">
+              <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_06.png" alt="Portal キャラクター">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COBOL -->
+      <div class="detail-panel" id="p-cobol">
+        <div class="detail-content">
+          <div class="detail-info">
+            <h3>&#x1F5A5;&#xFE0F; Owlia-COBOL</h3>
+            <span class="badge badge-soon" style="margin-bottom:12px">Coming Soon</span>
+            <div class="detail-role">COBOL開発AI支援エディター</div>
+            <div class="detail-desc">レガシーなCOBOL開発をモダンなUIとAIで変革。VSCode風画面で日本語指示だけでCOBOLコードを生成・校正。</div>
+            <div class="detail-features">
+              <div class="detail-feat"><span class="ck">&#x2714;</span> VSCode風モダンエディター</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> 日本語指示でコーディング</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> AIによるコード校正</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> COBOL特化の補完・支援</div>
+            </div>
+            <button class="btn btn-disabled">準備中</button>
+          </div>
+          <div>
+            <div class="detail-character">
+              <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_23_59.png" alt="COBOL キャラクター">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grimoire -->
+      <div class="detail-panel" id="p-grimoire">
+        <div class="detail-content">
+          <div class="detail-info">
+            <h3>&#x1F4DA; Owlia-Grimoire</h3>
+            <span class="badge badge-ok" style="margin-bottom:12px">利用可能</span>
+            <div class="detail-role">開発者向けAPIプラットフォーム</div>
+            <div class="detail-desc">自分のアプリにOwliaのAI機能を組み込みたい開発者のためのAPI基盤。RESTful APIでOwliaの社内RAG・チャット機能を自由にインテグレーション。</div>
+            <div class="detail-features">
+              <div class="detail-feat"><span class="ck">&#x2714;</span> Owlia API 利用可能</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> 開発環境へのAI組み込み</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> ドキュメント・サンプルコード</div>
+            </div>
+            <a href="go.html?app=grimoire&url=#" class="btn btn-teal">Grimoireを使う</a>
+          </div>
+          <div>
+            <div class="detail-character">
+              <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_25_03.png" alt="Grimoire キャラクター">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chronicle -->
+      <div class="detail-panel" id="p-chronicle">
+        <div class="detail-content">
+          <div class="detail-info">
+            <h3>&#x1F4C5; Owlia-Chronicle</h3>
+            <span class="badge badge-soon" style="margin-bottom:12px">Coming Soon</span>
+            <div class="detail-role">AIタスク管理・議事録要約</div>
+            <div class="detail-desc">ミーティングの議事録を自動要約、タスクを自動抽出・管理。スケジュール管理もAIがサポート。</div>
+            <div class="detail-features">
+              <div class="detail-feat"><span class="ck">&#x2714;</span> AIタスク管理</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> 議事録自動要約</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> スケジュール管理連携</div>
+            </div>
+            <button class="btn btn-disabled">準備中</button>
+          </div>
+          <div>
+            <div class="detail-character">
+              <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_02.png" alt="Chronicle キャラクター">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plugins -->
+      <div class="detail-panel" id="p-plugins">
+        <div class="detail-content">
+          <div class="detail-info">
+            <h3>&#x1F9E9; Owlia-Plugins</h3>
+            <span class="badge badge-soon" style="margin-bottom:12px">Coming Soon</span>
+            <div class="detail-role">開発環境AI統合</div>
+            <div class="detail-desc">VSCode等の開発環境にOwliaのAI機能を直接統合。エディターから離れずにAI支援を受けられます。</div>
+            <div class="detail-features">
+              <div class="detail-feat"><span class="ck">&#x2714;</span> VSCode拡張機能</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> エディター内AI支援</div>
+              <div class="detail-feat"><span class="ck">&#x2714;</span> シームレスな統合体験</div>
+            </div>
+            <button class="btn btn-disabled">準備中</button>
+          </div>
+          <div>
+            <div class="detail-character">
+              <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_04.png" alt="Plugins キャラクター">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="cta">
+    <div class="cta-deco-1"></div>
+    <div class="cta-deco-2"></div>
+    <div class="cta-deco-3"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="cta-owl fi"><img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_09.png" alt="Owlia"></div>
+      <span class="section-label fi">GET STARTED</span>
+      <h2 class="section-title fi">今日からOwliaを始めよう</h2>
+      <p class="section-subtitle fi">社内知識 &times; AI で、あなたの業務が変わります。<br>まずはSpriteをインストールして、Portalにログイン。</p>
+      <div class="cta-buttons fi">
+        <a href="go.html?app=sprite&url=#" class="btn btn-white">Spriteをダウンロード</a>
+        <a href="go.html?app=portal&url=#" class="btn btn-outline">Portalにログイン</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">&#x1F989; Owlia</div>
+        <div class="footer-text">NIT社内専用 AI プラットフォーム &mdash; Internal Use Only</div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" aria-label="ページトップへ">&#x2191;</button>
+
+  <!-- Chatbot Widget -->
+  <div class="chatbot-fab" id="chatbotFab" aria-label="AIガイドに相談">
+    <img src="docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_09.png" alt="オウくん" class="chatbot-fab-img">
+    <span class="chatbot-fab-pulse"></span>
+    <span class="chatbot-fab-label">AIに相談</span>
+  </div>
+
+  <div class="chatbot-panel" id="chatbotPanel">
+    <div class="chatbot-header">
+      <div class="chatbot-header-info">
+        <div class="chatbot-avatar">&#x1F989;</div>
+        <div>
+          <div class="chatbot-name">Owlia AIガイド</div>
+          <div class="chatbot-status"><span class="chatbot-status-dot"></span> オウくんがご案内します</div>
+        </div>
+      </div>
+      <button class="chatbot-close" id="chatbotClose" aria-label="閉じる">&times;</button>
+    </div>
+    <!-- Chat -->
+    <div class="chatbot-body" id="chatbotChat">
+      <div class="chatbot-messages" id="chatbotMessages"></div>
+      <div class="chatbot-chips" id="chatbotChips"></div>
+      <div class="chatbot-input-area">
+        <textarea id="chatbotInput" rows="1" placeholder="AIで実現したいことを入力…"></textarea>
+        <button class="chatbot-send" id="chatbotSend" disabled>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+            <path d="M22 2L11 13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
