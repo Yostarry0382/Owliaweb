@@ -148,6 +148,7 @@ function initGSAP() {
   const isMobile = window.innerWidth < 768;
 
   initHeroAnimations(isMobile);
+  initHeroOwlHover();
   initParallax(isMobile);
   initTextAnimations();
   initCardHoverEffects();
@@ -236,39 +237,104 @@ function initHeroAnimations(isMobile) {
   });
 }
 
+/* ----- Hero Owl Hover (swap expression, pixel-accurate) ----- */
+function initHeroOwlHover() {
+  const owls = document.querySelectorAll('.hero-owl[data-hover-src]');
+  if (!owls.length) return;
+
+  const owlData = [];
+
+  function buildAlphaMap(owl) {
+    if (!owl.naturalWidth || !owl.naturalHeight) return null;
+    try {
+      const c = document.createElement('canvas');
+      c.width = owl.naturalWidth;
+      c.height = owl.naturalHeight;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(owl, 0, 0);
+      const imgData = ctx.getImageData(0, 0, c.width, c.height).data;
+      return { data: imgData, w: c.width, h: c.height };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  owls.forEach(owl => {
+    const defaultSrc = owl.dataset.defaultSrc;
+    const hoverSrc = owl.dataset.hoverSrc;
+    if (!defaultSrc || !hoverSrc) return;
+
+    // Preload hover image
+    const preload = new Image();
+    preload.src = hoverSrc;
+
+    const od = { el: owl, defaultSrc, hoverSrc, alphaMap: null, hovered: false };
+
+    // Build alpha map now if image is already loaded, otherwise wait
+    if (owl.complete && owl.naturalWidth) {
+      od.alphaMap = buildAlphaMap(owl);
+    } else {
+      owl.addEventListener('load', () => {
+        od.alphaMap = buildAlphaMap(owl);
+      }, { once: true });
+    }
+
+    owlData.push(od);
+  });
+
+  function isOpaqueAt(od, clientX, clientY) {
+    const rect = od.el.getBoundingClientRect();
+    const rx = (clientX - rect.left) / rect.width;
+    const ry = (clientY - rect.top) / rect.height;
+    if (rx < 0 || rx > 1 || ry < 0 || ry > 1) return false;
+    if (!od.alphaMap) {
+      // Fallback: only react within a narrower central area (30% inset from each side)
+      return rx > 0.30 && rx < 0.70 && ry > 0.15 && ry < 0.90;
+    }
+    const px = Math.floor(rx * od.alphaMap.w);
+    const py = Math.floor(ry * od.alphaMap.h);
+    const idx = (py * od.alphaMap.w + px) * 4 + 3;
+    return od.alphaMap.data[idx] > 30;
+  }
+
+  // Disable default pointer-events, we handle it manually
+  owls.forEach(owl => { owl.style.pointerEvents = 'none'; });
+
+  const heroScene = document.getElementById('heroScene');
+  if (!heroScene) return;
+
+  heroScene.addEventListener('mousemove', (e) => {
+    let handled = false;
+    for (let i = owlData.length - 1; i >= 0; i--) {
+      const od = owlData[i];
+      if (!handled && isOpaqueAt(od, e.clientX, e.clientY)) {
+        if (!od.hovered) {
+          od.el.src = od.hoverSrc;
+          od.hovered = true;
+        }
+        handled = true;
+      } else if (od.hovered) {
+        od.el.src = od.defaultSrc;
+        od.hovered = false;
+      }
+    }
+    heroScene.style.cursor = handled ? 'pointer' : '';
+  });
+
+  heroScene.addEventListener('mouseleave', () => {
+    owlData.forEach(od => {
+      if (od.hovered) {
+        od.el.src = od.defaultSrc;
+        od.hovered = false;
+      }
+    });
+    heroScene.style.cursor = '';
+  });
+}
+
 /* ----- Parallax ----- */
 function initParallax(isMobile) {
   if (isMobile) return;
-
-  // Hero scene parallax
-  const heroScene = document.getElementById('heroScene');
-  if (heroScene) {
-    gsap.to(heroScene, {
-      y: 100,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-      },
-    });
-  }
-
-  // Hero title opposite direction
-  const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle) {
-    gsap.to(heroTitle, {
-      y: -50,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-      },
-    });
-  }
 
   // Section containers subtle parallax
   document.querySelectorAll('.comp, .apps, .steps, .roles, .detail').forEach(sec => {
@@ -500,7 +566,7 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     for (const m of messages) {
       if (m.role === 'assistant') {
         html += `<div class="cb-msg-row cb-msg-bot">
-          <div class="cb-avatar">&#x1F989;</div>
+          <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.png" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
           <div class="cb-bubble cb-bubble-bot">${formatBotMessage(m.content)}</div>
         </div>`;
       } else {
@@ -511,7 +577,7 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     }
     if (loading) {
       html += `<div class="cb-msg-row cb-msg-bot">
-        <div class="cb-avatar">&#x1F989;</div>
+        <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.png" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
         <div class="cb-bubble cb-bubble-bot cb-typing">
           <span class="cb-dot"></span><span class="cb-dot"></span><span class="cb-dot"></span>
         </div>
