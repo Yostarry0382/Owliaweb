@@ -149,7 +149,7 @@ img { max-width: 100%; display: block; }
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: url('../docs/background/ChatGPT Image 2026年3月7日 00_51_39.png') center center / cover no-repeat;
+  background: url('../docs/background/ChatGPT Image 2026年3月7日 00_51_39.webp') center center / cover no-repeat;
   overflow: hidden;
 }
 .hero::before {

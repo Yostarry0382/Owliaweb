@@ -452,7 +452,7 @@ function initMarquee() {
    ======================================== */
 function initChatbot() {
   // --- Config ---
-  const PROXY_URL = 'https://your-proxy.example.com/v1/messages';
+  const PROXY_URL = '/api/chat';
   const SYSTEM_PROMPT = `あなたは「Owlia（オウリア）」という社内生成AIプラットフォームの案内フクロウ「オウくん」です。
 ユーザーがAIで実現したいことを聞いて、Owliaの適切なアプリを紹介してください。
 
@@ -566,7 +566,7 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     for (const m of messages) {
       if (m.role === 'assistant') {
         html += `<div class="cb-msg-row cb-msg-bot">
-          <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.png" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+          <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.webp" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
           <div class="cb-bubble cb-bubble-bot">${formatBotMessage(m.content)}</div>
         </div>`;
       } else {
@@ -577,7 +577,7 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     }
     if (loading) {
       html += `<div class="cb-msg-row cb-msg-bot">
-        <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.png" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+        <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.webp" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
         <div class="cb-bubble cb-bubble-bot cb-typing">
           <span class="cb-dot"></span><span class="cb-dot"></span><span class="cb-dot"></span>
         </div>
