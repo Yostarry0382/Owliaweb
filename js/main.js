@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollToTop();
   initSmoothScroll();
   initGSAP();
+  initQuiz();
   initChatbot();
 });
 
@@ -444,6 +445,280 @@ function initMarquee() {
       x: gsap.utils.unitize(x => parseFloat(x) % trackWidth),
     },
   });
+}
+
+/* ========================================
+   Akinator-style Quiz
+   ======================================== */
+function initQuiz() {
+  const APPS = {
+    sprite:    { name: 'Owlia-Sprite',    role: 'デスクトップ常駐ランチャー', badge: 'available', icon: 'docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_07.webp', link: 'go.html?app=sprite&url=https://owlia-sprite.dairab.local', linkLabel: 'ダウンロード' },
+    portal:    { name: 'Owlia-Portal',    role: 'AIチャット・RAG',          badge: 'available', icon: 'docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_06.webp', link: 'go.html?app=portal&url=https://owlia.dairab.local/portal', linkLabel: 'ログイン' },
+    grimoire:  { name: 'Owlia-Grimoire',  role: '開発者向けAPI',            badge: 'available', icon: 'docs/character/transparent/ChatGPT Image 2026年3月9日 22_11_21.webp', link: 'go.html?app=grimoire&url=#', linkLabel: 'ドキュメント' },
+    cobol:     { name: 'Owlia-COBOL',     role: 'COBOL開発AI支援',          badge: 'coming',    icon: 'docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_04.webp', link: null, linkLabel: '準備中' },
+    chronicle: { name: 'Owlia-Chronicle', role: 'タスク管理・議事録',       badge: 'coming',    icon: 'docs/character/transparent/ChatGPT Image 2026年3月6日 14_25_03.webp', link: null, linkLabel: '準備中' },
+    plugins:   { name: 'Owlia-Plugins',   role: '開発環境AI統合',           badge: 'coming',    icon: 'docs/character/transparent/ChatGPT Image 2026年3月6日 14_24_02.webp', link: null, linkLabel: '準備中' },
+  };
+
+  var TOTAL_STEPS = 5;
+
+  var QUESTIONS = {
+    // --- Q1: 職種 ---
+    q1: {
+      text: 'まず教えて！あなたのお仕事は？',
+      answers: [
+        { label: 'A', text: '開発・エンジニア系',   scores: { grimoire: 2, plugins: 2, sprite: 1, portal: 1 }, next: 'q2_dev' },
+        { label: 'B', text: '事務・管理系',         scores: { portal: 2, sprite: 2, chronicle: 2 }, next: 'q2_admin' },
+        { label: 'C', text: 'マネジメント・企画系',  scores: { portal: 2, chronicle: 2, sprite: 1 }, next: 'q2_mgmt' },
+      ],
+    },
+    // --- Q2: 課題 ---
+    q2_dev: {
+      text: '開発で一番困っていることは？',
+      answers: [
+        { label: 'A', text: 'コードを書くのに時間がかかる',   scores: { plugins: 2, sprite: 1 }, next: 'q3_coding' },
+        { label: 'B', text: '既存システムの保守が大変',       scores: { plugins: 1, portal: 1 }, next: 'q3_legacy' },
+        { label: 'C', text: 'AIを自分のアプリに組み込みたい', scores: { grimoire: 3, portal: 1 }, next: 'q3_api' },
+      ],
+    },
+    q2_admin: {
+      text: '日々の業務で面倒に感じることは？',
+      answers: [
+        { label: 'A', text: '資料探し・情報の整理',       scores: { portal: 3, sprite: 1 }, next: 'q3_search' },
+        { label: 'B', text: '議事録やタスクの管理',       scores: { chronicle: 3, sprite: 1 }, next: 'q3_task' },
+        { label: 'C', text: '同じような文章を何度も書く', scores: { sprite: 2, portal: 2 }, next: 'q3_write' },
+      ],
+    },
+    q2_mgmt: {
+      text: 'チーム運営で課題に感じることは？',
+      answers: [
+        { label: 'A', text: '情報共有がうまくいかない',   scores: { portal: 3, sprite: 1 }, next: 'q3_share' },
+        { label: 'B', text: '会議が多くて時間が足りない', scores: { chronicle: 3, portal: 1 }, next: 'q3_meeting' },
+        { label: 'C', text: 'メンバーの生産性を上げたい', scores: { sprite: 2, portal: 1, chronicle: 1, plugins: 1 }, next: 'q3_prod' },
+      ],
+    },
+    // --- Q3: 深掘り（9パターン） ---
+    q3_coding: {
+      text: 'どんな言語・環境で開発している？',
+      answers: [
+        { label: 'A', text: 'COBOL・レガシー系',       scores: { cobol: 6, plugins: 1 }, next: 'q4_dev' },
+        { label: 'B', text: 'VSCode等のモダン環境',     scores: { plugins: 3, grimoire: 1 }, next: 'q4_dev' },
+        { label: 'C', text: 'いろいろ（特定なし）',     scores: { sprite: 2, plugins: 1, grimoire: 1 }, next: 'q4_dev' },
+      ],
+    },
+    q3_legacy: {
+      text: 'レガシーシステムの課題は？',
+      answers: [
+        { label: 'A', text: 'COBOLの読解・改修が大変',   scores: { cobol: 6, grimoire: 1 }, next: 'q4_dev' },
+        { label: 'B', text: 'ドキュメントが不足している', scores: { portal: 3, sprite: 1 }, next: 'q4_dev' },
+        { label: 'C', text: 'テスト・品質管理が不十分',   scores: { plugins: 3, grimoire: 1 }, next: 'q4_dev' },
+      ],
+    },
+    q3_api: {
+      text: 'APIで実現したいことは？',
+      answers: [
+        { label: 'A', text: '社内チャットボットを作りたい',     scores: { grimoire: 3, portal: 2 }, next: 'q4_dev' },
+        { label: 'B', text: '業務アプリにAI機能を追加したい',   scores: { grimoire: 4, plugins: 1 }, next: 'q4_dev' },
+        { label: 'C', text: 'データ分析を自動化したい',         scores: { grimoire: 3, portal: 1, sprite: 1 }, next: 'q4_dev' },
+      ],
+    },
+    q3_search: {
+      text: 'どんな資料を扱うことが多い？',
+      answers: [
+        { label: 'A', text: '社内マニュアル・規定類', scores: { portal: 3, sprite: 1 }, next: 'q4_general' },
+        { label: 'B', text: '顧客・案件の情報',     scores: { portal: 3, chronicle: 1 }, next: 'q4_general' },
+        { label: 'C', text: '報告書・レポート類',    scores: { portal: 2, sprite: 2 }, next: 'q4_general' },
+      ],
+    },
+    q3_task: {
+      text: 'タスク管理で困っていることは？',
+      answers: [
+        { label: 'A', text: '議事録作成に時間がかかる', scores: { chronicle: 4, portal: 1 }, next: 'q4_general' },
+        { label: 'B', text: 'タスクの抜け漏れが起きる', scores: { chronicle: 3, sprite: 1 }, next: 'q4_general' },
+        { label: 'C', text: '進捗の共有が面倒',        scores: { chronicle: 3, portal: 1 }, next: 'q4_general' },
+      ],
+    },
+    q3_write: {
+      text: 'どんな文章を書くことが多い？',
+      answers: [
+        { label: 'A', text: 'メール・社内連絡', scores: { sprite: 3, portal: 1 }, next: 'q4_general' },
+        { label: 'B', text: '提案書・企画書',   scores: { portal: 3, sprite: 1 }, next: 'q4_general' },
+        { label: 'C', text: '報告書・日報',     scores: { sprite: 2, portal: 2 }, next: 'q4_general' },
+      ],
+    },
+    q3_share: {
+      text: '情報共有の課題は？',
+      answers: [
+        { label: 'A', text: 'ナレッジが属人化している', scores: { portal: 4, sprite: 1 }, next: 'q4_mgmt' },
+        { label: 'B', text: '資料が散在して見つからない', scores: { portal: 3, sprite: 2 }, next: 'q4_mgmt' },
+        { label: 'C', text: '部門間の連携が弱い',       scores: { portal: 2, chronicle: 2, sprite: 1 }, next: 'q4_mgmt' },
+      ],
+    },
+    q3_meeting: {
+      text: '会議の課題は？',
+      answers: [
+        { label: 'A', text: '議事録を書く余裕がない',       scores: { chronicle: 4, sprite: 1 }, next: 'q4_mgmt' },
+        { label: 'B', text: '決定事項のフォローが漏れる',   scores: { chronicle: 3, portal: 1 }, next: 'q4_mgmt' },
+        { label: 'C', text: '会議の事前準備に時間がかかる', scores: { portal: 2, sprite: 2, chronicle: 1 }, next: 'q4_mgmt' },
+      ],
+    },
+    q3_prod: {
+      text: '生産性向上で重視することは？',
+      answers: [
+        { label: 'A', text: '定型作業の自動化',               scores: { sprite: 3, chronicle: 1 }, next: 'q4_mgmt' },
+        { label: 'B', text: '意思決定のスピードアップ',       scores: { portal: 3, chronicle: 1 }, next: 'q4_mgmt' },
+        { label: 'C', text: 'ツール導入のハードルを下げたい', scores: { sprite: 3, portal: 1 }, next: 'q4_mgmt' },
+      ],
+    },
+    // --- Q4: ツールへの期待（3パターン） ---
+    q4_dev: {
+      text: 'AIツールに求めることは？',
+      answers: [
+        { label: 'A', text: 'とにかく手軽に使いたい',         scores: { sprite: 3, portal: 1 }, next: 'q5' },
+        { label: 'B', text: 'カスタマイズ性・自由度が欲しい', scores: { grimoire: 3, plugins: 1 }, next: 'q5' },
+        { label: 'C', text: '社内データと連携したい',         scores: { portal: 3, grimoire: 1 }, next: 'q5' },
+      ],
+    },
+    q4_general: {
+      text: 'AIツールに求めることは？',
+      answers: [
+        { label: 'A', text: '簡単に始められること',       scores: { sprite: 3, portal: 1 }, next: 'q5' },
+        { label: 'B', text: '社内の情報を学習させたい',   scores: { portal: 4 }, next: 'q5' },
+        { label: 'C', text: 'チームで共有できること',     scores: { portal: 2, chronicle: 2 }, next: 'q5' },
+      ],
+    },
+    q4_mgmt: {
+      text: '導入で重視するポイントは？',
+      answers: [
+        { label: 'A', text: '誰でもすぐ使える簡単さ',   scores: { sprite: 3, portal: 1 }, next: 'q5' },
+        { label: 'B', text: '社内データの活用',         scores: { portal: 4, grimoire: 1 }, next: 'q5' },
+        { label: 'C', text: '段階的に導入できること',   scores: { sprite: 2, portal: 2 }, next: 'q5' },
+      ],
+    },
+    // --- Q5: 経験レベル（共通・最終） ---
+    q5: {
+      text: 'AIの経験レベルは？',
+      answers: [
+        { label: 'A', text: '初めて・あまり使ったことがない', scores: { sprite: 3, portal: 1 }, next: null },
+        { label: 'B', text: 'たまに使っている',              scores: { portal: 2, sprite: 1 }, next: null },
+        { label: 'C', text: 'バリバリ使っている！',          scores: { grimoire: 2, plugins: 2 }, next: null },
+      ],
+    },
+  };
+
+  const stageEl = document.getElementById('quizStage');
+  const resultsEl = document.getElementById('quizResults');
+  const questionEl = document.getElementById('quizQuestion');
+  const answersEl = document.getElementById('quizAnswers');
+  const progressBar = document.getElementById('quizProgressBar');
+  const resultCardsEl = document.getElementById('quizResultCards');
+  const resultTextEl = document.getElementById('quizResultText');
+  const restartBtn = document.getElementById('quizRestart');
+
+  if (!stageEl || !resultsEl) return;
+
+  let scores = {};
+  let stepNum = 1;
+
+  function resetScores() {
+    scores = {};
+    Object.keys(APPS).forEach(function(k) { scores[k] = 0; });
+  }
+
+  function addScores(s) {
+    Object.keys(s).forEach(function(k) { scores[k] = (scores[k] || 0) + s[k]; });
+  }
+
+  function getTopApps(count) {
+    return Object.keys(scores)
+      .map(function(k) { return { key: k, score: scores[k] }; })
+      .sort(function(a, b) { return b.score - a.score; })
+      .slice(0, count)
+      .map(function(entry) { return Object.assign({ key: entry.key }, APPS[entry.key]); });
+  }
+
+  function renderQuestion(qKey) {
+    var q = QUESTIONS[qKey];
+    if (!q) return;
+
+    progressBar.style.width = (stepNum / TOTAL_STEPS * 100) + '%';
+
+    var bubbleInner = document.querySelector('#quizBubble .quiz-bubble-inner');
+    bubbleInner.classList.add('fade-out');
+
+    setTimeout(function() {
+      questionEl.textContent = q.text;
+      bubbleInner.classList.remove('fade-out');
+      bubbleInner.classList.add('fade-in');
+      setTimeout(function() { bubbleInner.classList.remove('fade-in'); }, 350);
+    }, 250);
+
+    answersEl.innerHTML = '';
+    q.answers.forEach(function(ans, i) {
+      var btn = document.createElement('button');
+      btn.className = 'quiz-answer-btn';
+      btn.innerHTML = '<span class="quiz-answer-label">' + ans.label + '</span><span>' + ans.text + '</span>';
+      btn.style.animationDelay = (0.3 + i * 0.1) + 's';
+      btn.addEventListener('click', function() { handleAnswer(ans); });
+      answersEl.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(answer) {
+    addScores(answer.scores);
+    if (answer.next === null) {
+      showResults();
+    } else {
+      stepNum++;
+      renderQuestion(answer.next);
+    }
+  }
+
+  function showResults() {
+    stageEl.style.display = 'none';
+    resultsEl.style.display = '';
+    resultsEl.classList.add('v');
+
+    var topApps = getTopApps(3);
+    resultTextEl.textContent = 'ホホウ！あなたには ' + topApps[0].name + ' がピッタリ！';
+
+    resultCardsEl.innerHTML = '';
+    topApps.forEach(function(app, i) {
+      var card = document.createElement('div');
+      card.className = 'quiz-result-card';
+
+      var badgeHtml = app.badge === 'available'
+        ? '<span class="badge badge-ok">&#x2705; 利用可能</span>'
+        : '<span class="badge badge-soon">&#x23F3; Coming Soon</span>';
+
+      var ctaHtml = app.link
+        ? '<a href="' + app.link + '" class="btn btn-teal btn-sm">' + app.linkLabel + '</a>'
+        : '<button class="btn btn-disabled btn-sm">' + app.linkLabel + '</button>';
+
+      card.innerHTML =
+        '<div class="quiz-result-rank">' + (i + 1) + '</div>' +
+        '<div class="quiz-result-icon"><img src="' + app.icon + '" alt="' + app.name + '" loading="lazy"></div>' +
+        '<div class="quiz-result-info">' +
+          '<div class="quiz-result-name">' + app.name + '</div>' +
+          '<div class="quiz-result-role">' + app.role + '</div>' +
+          badgeHtml +
+        '</div>' +
+        '<div class="quiz-result-action">' + ctaHtml + '</div>';
+
+      resultCardsEl.appendChild(card);
+    });
+  }
+
+  restartBtn.addEventListener('click', function() {
+    resetScores();
+    stepNum = 1;
+    resultsEl.style.display = 'none';
+    stageEl.style.display = '';
+    renderQuestion('q1');
+  });
+
+  resetScores();
+  renderQuestion('q1');
 }
 
 /* ========================================

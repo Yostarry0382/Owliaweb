@@ -15,9 +15,8 @@
   <div class="mobile-menu" id="mobileMenu">
     <button class="mobile-menu-close" id="menuClose" aria-label="閉じる">&times;</button>
     <a href="#apps">アプリ一覧</a>
-    <a href="#steps">利用の流れ</a>
     <a href="#detail">詳しい使い方</a>
-    <a href="#roles">職種別おすすめ</a>
+    <a href="#roles">おすすめ診断</a>
   </div>
 
   <!-- HERO -->
@@ -27,10 +26,8 @@
         <a href="#" class="nav-logo"><span>&#x1F989;</span> Owlia</a>
         <div class="nav-links">
           <a href="#apps">アプリ一覧</a>
-          <a href="#comparison">Owliaの強み</a>
-          <a href="#steps">利用の流れ</a>
           <a href="#detail">詳しい使い方</a>
-          <a href="#roles">職種別おすすめ</a>
+          <a href="#roles">おすすめ診断</a>
         </div>
         <button class="nav-menu-btn" id="hamburger" aria-label="メニュー">
           <span></span><span></span><span></span>
@@ -93,7 +90,7 @@
             <span class="badge badge-ok">&#x2705; 利用可能</span>
           </div>
           <div class="app-card-name">Owlia-Sprite</div>
-          <div class="app-card-role">すべての入り口</div>
+          <div class="app-card-role">常駐型AIエージェント</div>
           <div class="app-card-desc">デスクトップ常駐AIエージェント。ショートカットキーでサクッとAIにタスクを依頼。</div>
           <div class="app-card-tags">
             <span class="app-tag">ショートカットキー起動</span>
@@ -110,8 +107,8 @@
             <span class="badge badge-ok">&#x2705; 利用可能</span>
           </div>
           <div class="app-card-name">Owlia-Portal</div>
-          <div class="app-card-role">全アプリのエントランス</div>
-          <div class="app-card-desc">Owliaのエントランス。RAGドキュメント一括設定・各アプリへのナビゲーション。</div>
+          <div class="app-card-role">知恵の書庫</div>
+          <div class="app-card-desc">ドキュメントをRAG設定で登録し、Owliaアプリで有効活用化</div>
           <div class="app-card-tags">
             <span class="app-tag">AIチャット</span>
             <span class="app-tag">RAG設定</span>
@@ -192,81 +189,49 @@
   </section>
 
   <!-- STEPS -->
-  <section class="steps" id="steps">
-    <div class="container">
-      <div class="section-header fi">
-        <span class="section-label">&#x1F680; HOW TO START</span>
-        <h2 class="section-title">かんたん3ステップで始める</h2>
-        <p class="section-subtitle">最短2分でOwliaが使えるようになります。</p>
-      </div>
-      <div class="steps-grid">
-        <div class="step fi">
-          <div class="step-num">1</div>
-          <div class="step-emoji">&#x1F4E5;</div>
-          <div class="step-title">Spriteをインストール</div>
-          <div class="step-desc">exeファイルをダウンロードして実行するだけ。環境起動時に自動で常駐します。<br>AIをまず使ってみたいあなたはこちら</div>
-          <a href="go.html?app=sprite&url=https://owlia-sprite.dairab.local" class="btn btn-orange btn-sm">ダウンロード</a>
-        </div>
-        <div class="step fi fi-d1">
-          <div class="step-num">2</div>
-          <div class="step-emoji">&#x1F511;</div>
-          <div class="step-title">Portalにログイン</div>
-          <div class="step-desc">じっくりAIと対話したい場合やRAG設定を行うwebアプリケーションです<br>より便利にAIを便利に使いこなしたい方向け</div>
-          <a href="go.html?app=portal&url=https://owlia.dairab.local/portal" class="btn btn-teal btn-sm">ログイン</a>
-        </div>
-        <div class="step fi fi-d2">
-          <div class="step-num">3</div>
-          <div class="step-emoji">&#x2705;</div>
-          <div class="step-title"> RAG設定&amp;利用開始</div>
-          <div class="step-desc">Portalであなたの持っているドキュメントを登録したら、各アプリを使い始めましょう。</div>
-          <a href="#apps" class="btn btn-white btn-sm">アプリを見る</a>
-        </div>
-      </div>
-    </div>
-    <svg class="wave-divider" viewBox="0 0 1440 80" preserveAspectRatio="none" style="position:absolute;bottom:0;left:0;z-index:3;">
-      <path d="M0,40 C360,0 720,70 1080,30 C1260,10 1380,40 1440,30 L1440,80 L0,80 Z" fill="#ffffff"/>
-    </svg>
-  </section>
 
   <!-- ROLES -->
   <section class="roles" id="roles">
     <div class="container">
       <div class="section-header fi">
         <span class="section-label">&#x1F464; FOR YOU</span>
-        <h2 class="section-title">あなたの職種に合うアプリは？</h2>
-        <p class="section-subtitle">職種別のおすすめアプリをご紹介。</p>
+        <h2 class="section-title">あなたに合うアプリ</h2>
+        <p class="section-subtitle">かんたんな質問に答えるだけで、おすすめのOwliaアプリがわかります。</p>
       </div>
-      <div class="roles-grid">
-        <div class="role-card fi">
-          <div class="role-emoji">&#x1F468;&#x200D;&#x1F4BB;</div>
-          <div class="role-title">開発職</div>
-          <div class="role-desc">コーディング支援からAPI連携まで、開発全体をAIが加速。</div>
-          <div class="role-apps">
-            <div class="role-app"><span>&#x1F4BB;</span> Sprite - 常駐ランチャー</div>
-            <div class="role-app"><span>&#x1F4DA;</span> Grimoire - API連携</div>
-            <div class="role-app"><span>&#x1F5A5;&#xFE0F;</span> COBOL - COBOL支援</div>
-            <div class="role-app"><span>&#x1F9E9;</span> Plugins - 開発環境統合</div>
+
+      <div class="quiz-stage fi" id="quizStage">
+        <div class="quiz-character-area">
+          <div class="quiz-character">
+            <img src="docs/character/quiz-owl.png" alt="占いフクロウ" class="quiz-owl-img">
+          </div>
+          <div class="quiz-bubble" id="quizBubble">
+            <div class="quiz-bubble-inner">
+              <div class="quiz-progress" id="quizProgress">
+                <div class="quiz-progress-bar" id="quizProgressBar"></div>
+              </div>
+              <p class="quiz-question" id="quizQuestion"></p>
+            </div>
+            <div class="quiz-bubble-tail"></div>
           </div>
         </div>
-        <div class="role-card fi fi-d1">
-          <div class="role-emoji">&#x1F469;&#x200D;&#x1F4BC;</div>
-          <div class="role-title">事務職</div>
-          <div class="role-desc">資料検索・要約・タスク管理で日常業務の効率を大幅アップ。</div>
-          <div class="role-apps">
-            <div class="role-app"><span>&#x1F4BB;</span> Sprite - 常駐ランチャー</div>
-            <div class="role-app"><span>&#x1F30D;</span> Portal - AIチャット・RAG</div>
-            <div class="role-app"><span>&#x1F4C5;</span> Chronicle - タスク・議事録</div>
+        <div class="quiz-answers" id="quizAnswers"></div>
+      </div>
+
+      <div class="quiz-results fi" id="quizResults" style="display:none;">
+        <div class="quiz-character-area">
+          <div class="quiz-character">
+            <img src="docs/character/quiz-owl.png" alt="占いフクロウ" class="quiz-owl-img">
+          </div>
+          <div class="quiz-bubble">
+            <div class="quiz-bubble-inner">
+              <p class="quiz-question" id="quizResultText"></p>
+            </div>
+            <div class="quiz-bubble-tail"></div>
           </div>
         </div>
-        <div class="role-card fi fi-d2">
-          <div class="role-emoji">&#x1F468;&#x200D;&#x1F4BC;</div>
-          <div class="role-title">マネジメント職</div>
-          <div class="role-desc">情報収集・議事録管理をAIでスピーディに。</div>
-          <div class="role-apps">
-            <div class="role-app"><span>&#x1F4BB;</span> Sprite - 常駐ランチャー</div>
-            <div class="role-app"><span>&#x1F30D;</span> Portal - AIチャット・RAG</div>
-            <div class="role-app"><span>&#x1F4C5;</span> Chronicle - 議事録要約</div>
-          </div>
+        <div class="quiz-result-cards" id="quizResultCards"></div>
+        <div class="quiz-restart">
+          <button class="btn btn-white btn-sm" id="quizRestart">&#x1F504; もう一度やる</button>
         </div>
       </div>
     </div>
