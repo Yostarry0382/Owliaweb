@@ -894,21 +894,25 @@ function initQuiz() {
 function initChatbot() {
   // --- Config ---
   const PROXY_URL = '/api/chat';
-  const SYSTEM_PROMPT = `あなたは「Owlia（オウリア）」という社内生成AIプラットフォームの案内フクロウ「オウくん」です。
-ユーザーがAIで実現したいことを聞いて、Owliaの適切なアプリを紹介してください。
+  const SYSTEM_PROMPT = `<identity>
+あなたはOwliaアプリのアシスタントの「エリちゃん」です。
+ユーザーがAIで実現したいことを聞いて、最適なOwliaアプリを紹介します。
+</identity>
 
-## Owliaとは
-NIT社内専用の生成AIスイートです。社内ドキュメントを学習（RAG）し、Copilot等では返せない"NIT特有の答え"を提供します。
+<context>
+Owliaとは: NIT社内専用の生成AIプラットフォームです。社内ドキュメントを学習（RAG）し、あなたの登録したドキュメントから"NIT社内情報を踏まえた回答"を提供します。
+</context>
 
-## アプリ一覧
-- **Owlia-Sprite**（利用可能）: デスクトップ常駐ランチャー。Ctrl+Oで即起動。音声入力・テキスト選択・タスク登録・簡易チャット対応。exeをDLするだけ。
-- **Owlia-Portal**（利用可能）: メインチャット基地。社内ドキュメントのRAG設定・チャット跨ぎの記憶・ファイルサーバー一括学習。ID=氏名コード、初回PW=12345678。
-- **Owlia-COBOL**（Coming Soon）: VSCode風画面でCOBOL開発。日本語指示でコーディング・AI校正。
-- **Owlia-Grimoire**（利用可能）: 開発者向けAPIプラットフォーム。Owlia APIをアプリ開発に組み込み可能。
-- **Owlia-Chronicle**（Coming Soon）: AIタスク管理・議事録自動要約・スケジュール管理。
-- **Owlia-Plugins**（Coming Soon）: VSCode等の開発環境にAIを統合。
+<apps>
+- Owlia-Sprite（利用可能）: デスクトップ常駐AIエージェント。ショートカットキーでサクッとAIにタスクを依頼。音声入力・キャプチャ・タスク登録対応。
+- Owlia-Portal（利用可能）: 知恵の書庫。ドキュメントをRAG設定で登録し、AIチャット・AIコーディング・ファイル学習で有効活用。
+- Owlia-Grimoire（利用可能）: 開発者向けAPI。アプリ開発でOwlia APIが使える。開発環境へのAI組み込みを実現。
+- Owlia-COBOL（Coming Soon）: COBOL開発AI支援。VSCode風モダン画面で日本語指示からCOBOLコーディング。AI校正も。
+- Owlia-Chronicle（Coming Soon）: AIタスク管理・議事録。プロジェクト管理・スケジュール管理をAIがサポート。
+- Owlia-Plugins（Coming Soon）: 開発環境AI統合。VSCode等にOwlia AIを直接組み込み。コーディング中にAI支援。
+</apps>
 
-## 回答スタイル
+<response_rules>
 - 親しみやすいです・ます体で話す
 - 「ホホウ！」「なるほど〜」などフクロウらしい相槌を自然に使う
 - ユーザーのやりたいことに対して最適なOwliaアプリを1〜2個紹介する
@@ -916,7 +920,8 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
 - 回答は短め（3〜5文）でテンポよく
 - 最後に「他に気になることはありますか？」と聞く
 - Owliaで対応できないことには「現時点ではOwliaの対応範囲外ですが、貴重なご意見として記録しておきます！」と答える
-- マークダウンの**太字**は使ってOK、箇条書きも適度に使う`;
+- マークダウンの**太字**は使ってOK、箇条書きも適度に使う
+</response_rules>`;
 
   const QUICK_CHIPS = [
     '社内資料をAIに覚えさせたい',
@@ -977,6 +982,8 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     content: 'ホホウ！こんにちは わたしはOwliaのご案内フクロウです。\n\n**「AIを使って何を実現させたい？」**\n\n業務で困っていること・やりたいことを自由に入力してください。あなたに合ったOwliaアプリをご紹介します！',
   }];
   let loading = false;
+  let lastSendTime = 0;
+  const chipCache = new Map();
 
   // --- localStorage helpers for requests ---
   function getRequests() {
@@ -1008,7 +1015,7 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
       if (m.role === 'assistant') {
         html += `<div class="cb-msg-row cb-msg-bot">
           <div class="cb-avatar"><img src="docs/object/ChatGPT Image 2026年3月10日 00_00_29.webp" alt="オウくん" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
-          <div class="cb-bubble cb-bubble-bot">${formatBotMessage(m.content)}</div>
+          <div class="cb-bubble cb-bubble-bot"><button class="cb-copy" data-idx="${messages.indexOf(m)}" title="コピー">&#x1F4CB;</button>${formatBotMessage(m.content)}</div>
         </div>`;
       } else {
         html += `<div class="cb-msg-row cb-msg-user">
@@ -1045,11 +1052,36 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     sendBtn.disabled = !hasText || loading;
   }
 
+  // --- Build truncated history for API ---
+  function buildHistory() {
+    const mapped = messages.map(m => ({ role: m.role, content: m.content }));
+    if (mapped.length <= 13) return mapped;
+    // Keep first greeting + last 12 messages (6 exchanges)
+    return [mapped[0], ...mapped.slice(-12)];
+  }
+
+  // --- Fetch with retry ---
+  async function fetchWithRetry(url, options, retries = 2, delay = 1000) {
+    for (let i = 0; i <= retries; i++) {
+      try {
+        const res = await fetch(url, options);
+        if (res.ok) return res;
+        if (i < retries) await new Promise(r => setTimeout(r, delay));
+      } catch (err) {
+        if (i === retries) throw err;
+        await new Promise(r => setTimeout(r, delay));
+      }
+    }
+  }
+
   // --- API call ---
   async function send(text) {
     const txt = (text || inputEl.value).trim();
     if (!txt || loading) return;
+    if (Date.now() - lastSendTime < 500) return;
+    lastSendTime = Date.now();
     inputEl.value = '';
+    inputEl.style.height = 'auto';
     updateSendBtn();
 
     const userMsg = { role: 'user', id: uid(), content: txt };
@@ -1061,20 +1093,85 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     addRequest(txt);
 
     try {
-      const history = messages.map(m => ({ role: m.role, content: m.content }));
-      const res = await fetch(PROXY_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      // Check chip cache first
+      if (chipCache.has(txt)) {
+        await new Promise(r => setTimeout(r, 300));
+        messages.push({ role: 'assistant', id: uid(), content: chipCache.get(txt) });
+      } else {
+        const history = buildHistory();
+        const reqBody = {
           model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
           system: SYSTEM_PROMPT,
           messages: history,
-        }),
-      });
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || '申し訳ありません、回答できませんでした。';
-      messages.push({ role: 'assistant', id: uid(), content: reply });
+        };
+
+        // Try streaming first
+        let streamed = false;
+        try {
+          const res = await fetch(PROXY_URL + '/stream', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reqBody),
+          });
+          if (res.ok && res.body) {
+            streamed = true;
+            const botMsg = { role: 'assistant', id: uid(), content: '' };
+            messages.push(botMsg);
+            loading = false;
+            renderMessages();
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              buffer += decoder.decode(value, { stream: true });
+
+              const lines = buffer.split('\n');
+              buffer = lines.pop() || '';
+
+              for (const line of lines) {
+                if (!line.startsWith('data: ')) continue;
+                const data = line.slice(6).trim();
+                if (data === '[DONE]') continue;
+                try {
+                  const parsed = JSON.parse(data);
+                  if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+                    botMsg.content += parsed.delta.text;
+                    // Update only the last bot bubble
+                    const bubbles = messagesEl.querySelectorAll('.cb-bubble-bot');
+                    const lastBubble = bubbles[bubbles.length - 1];
+                    if (lastBubble) {
+                      const copyBtn = lastBubble.querySelector('.cb-copy');
+                      const copyHtml = copyBtn ? copyBtn.outerHTML : '';
+                      lastBubble.innerHTML = copyHtml + formatBotMessage(botMsg.content);
+                    }
+                    messagesEl.scrollTop = messagesEl.scrollHeight;
+                  }
+                } catch {}
+              }
+            }
+            // Cache quick chip responses
+            if (QUICK_CHIPS.includes(txt)) chipCache.set(txt, botMsg.content);
+          }
+        } catch {}
+
+        // Fallback to non-streaming
+        if (!streamed) {
+          const res = await fetchWithRetry(PROXY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reqBody),
+          });
+          const data = await res.json();
+          const reply = data.content?.[0]?.text || '申し訳ありません、回答できませんでした。';
+          messages.push({ role: 'assistant', id: uid(), content: reply });
+          if (QUICK_CHIPS.includes(txt)) chipCache.set(txt, reply);
+        }
+      }
     } catch {
       messages.push({ role: 'assistant', id: uid(), content: 'ごめんなさい エラーが発生しました。少し待ってから再度お試しください。' });
     } finally {
@@ -1097,7 +1194,11 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
     closeBtn.addEventListener('click', () => panel.classList.remove('open'));
   }
 
-  inputEl.addEventListener('input', updateSendBtn);
+  inputEl.addEventListener('input', () => {
+    updateSendBtn();
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+  });
   inputEl.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -1106,6 +1207,19 @@ NIT社内専用の生成AIスイートです。社内ドキュメントを学習
   });
 
   sendBtn.addEventListener('click', () => send());
+
+  // Copy button handler (delegated)
+  messagesEl.addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('.cb-copy');
+    if (!copyBtn) return;
+    const idx = parseInt(copyBtn.dataset.idx, 10);
+    const msg = messages[idx];
+    if (!msg) return;
+    navigator.clipboard.writeText(msg.content).then(() => {
+      copyBtn.textContent = '\u2713';
+      setTimeout(() => { copyBtn.textContent = '\u{1F4CB}'; }, 1500);
+    });
+  });
 
   // Initial render
   renderChips();
