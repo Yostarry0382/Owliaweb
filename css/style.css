@@ -847,6 +847,159 @@ img { max-width: 100%; display: block; }
 
 
 /* ==========================================
+   OWL CHARACTER MODAL
+   ========================================== */
+.owl-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 30, 0.6);
+  z-index: 970;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.owl-modal-overlay.open {
+  display: flex;
+  animation: owlOverlayIn 0.35s ease;
+}
+@keyframes owlOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.owl-modal {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255,255,255,0.1);
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  animation: owlModalIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes owlModalIn {
+  from { opacity: 0; transform: scale(0.88) translateY(30px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Close button */
+.owl-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(4px);
+  color: var(--gray-600);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  z-index: 5;
+  transition: all var(--transition);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.owl-modal-close:hover {
+  background: var(--white);
+  color: var(--gray-900);
+  transform: scale(1.1);
+}
+
+/* Hero area with eyecatch image */
+.owl-modal-hero {
+  position: relative;
+  overflow: hidden;
+}
+.owl-modal-glow {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+.owl-modal-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Body content */
+.owl-modal-body {
+  padding: 24px 32px 32px;
+  text-align: center;
+}
+.owl-modal-name {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--gray-800);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.owl-modal-personality {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+
+/* Recommended app card */
+.owl-modal-app-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  text-align: left;
+}
+.owl-modal-app-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gray-400);
+  margin-bottom: 6px;
+}
+.owl-modal-app-name {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--gray-800);
+  margin-bottom: 4px;
+}
+.owl-modal-app-desc {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.owl-modal-app-cta {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 480px) {
+  .owl-modal { border-radius: var(--radius-lg); max-width: 92vw; }
+  .owl-modal-hero { padding: 28px 24px 16px; min-height: 180px; }
+  .owl-modal-img { width: 160px; }
+  .owl-modal-body { padding: 20px 24px 28px; }
+  .owl-modal-name { font-size: 1.25rem; }
+}
+
+/* ==========================================
    REDUCED MOTION
    ========================================== */
 @media (prefers-reduced-motion: reduce) {
@@ -859,5 +1012,6 @@ img { max-width: 100%; display: block; }
   .st-char, .hero-char { opacity: 1 !important; transform: none !important; }
   .scroll-arrow { animation: none; }
   .chatbot-status-dot { animation: none; }
+  .owl-modal-overlay, .owl-modal { animation: none; }
   html { scroll-behavior: auto; }
 }

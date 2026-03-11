@@ -149,7 +149,8 @@ function initGSAP() {
   const isMobile = window.innerWidth < 768;
 
   initHeroAnimations(isMobile);
-  initHeroOwlHover();
+  const hoverSystem = initHeroOwlHover();
+  initOwlModal(hoverSystem);
   initParallax(isMobile);
   initTextAnimations();
   initCardHoverEffects();
@@ -330,6 +331,171 @@ function initHeroOwlHover() {
       }
     });
     heroScene.style.cursor = '';
+  });
+
+  return { owlData, isOpaqueAt };
+}
+
+/* ----- Owl Character Modal ----- */
+function initOwlModal(hoverSystem) {
+  var OWL_PROFILES = {
+    sprite: {
+      charName: 'けんしろう',
+      personality: 'いつもあなたのそばに寄り添う、元気いっぱいの小さなフクロウ。素早い動きとキラキラの瞳が特徴で、どんなタスクも「まかせて！」と引き受けてくれる頼もしい相棒。',
+      eyecatch: 'docs/eyecatch/webp/sprite.webp',
+
+      color: '#2a9bb0',
+      colorLight: '#e0f5f5',
+      appName: 'Owlia-Sprite',
+      appDesc: 'デスクトップ常駐AIエージェント。ショートカットキーで即起動し、音声入力・キャプチャでサクッとAI活用。',
+      link: 'go.html?app=sprite&url=https://owlia-sprite.dairab.local',
+      linkLabel: 'ダウンロード',
+    },
+    portal: {
+      charName: 'ポー太郎',
+      personality: '膨大な知識を蓄えた博識なフクロウ。古びた書物と最新のデータの両方に通じ、穏やかな語り口であなたの疑問に答えてくれる。',
+      eyecatch: 'docs/eyecatch/webp/portal.webp',
+
+      color: '#4a8fd4',
+      colorLight: '#dceaf8',
+      appName: 'Owlia-Portal',
+      appDesc: 'AIチャット・社内RAG設定・ドキュメント登録。Owliaの知識を一元管理するWebアプリ。',
+      link: 'go.html?app=portal&url=https://owlia.dairab.local/portal',
+      linkLabel: 'ログイン',
+    },
+    grimoire: {
+      charName: 'マネ次郎',
+      personality: '歴史と記録をこよなく愛する責任感が強いリーダー的フクロウ。一度見聞きしたことは決して忘れず、プロジェクトの流れを丁寧に紡いでくれる記録の達人。',
+      eyecatch: 'docs/eyecatch/webp/grimoire.webp',
+
+      color: '#5bb579',
+      colorLight: '#ddf3e4',
+      appName: 'Owlia-Chronicle',
+      appDesc: 'プロジェクト管理・議事録・スケジュールをAIがサポートするタスク管理ツール。',
+      link: null,
+      linkLabel: '準備中',
+    },
+    cobol: {
+      charName: 'グリモ',
+      personality: 'Owliaのガキ大将フクロウ。他人想いで義理固く涙もろい一面もある。主な趣味は歌であるが、聞くに堪えないレベルの音痴。',
+      eyecatch: 'docs/eyecatch/webp/cobol.webp',
+
+      color: '#8b6cc1',
+      colorLight: '#ede5f5',
+      appName: 'Owlia-Grimoire',
+      appDesc: 'OwliaのAI機能をAPIで自分のアプリに組み込める、開発者向けプラットフォーム。',
+      link: 'go.html?app=grimoire&url=#',
+      linkLabel: 'ドキュメント',
+    },
+    chronicle: {
+      charName: 'ふくのすけ',
+      personality: '好奇心旺盛で発明好きなフクロウ。あらゆるツールと仲良くなれる社交性を持ち、開発環境にスッと溶け込むムードメーカー。',
+      eyecatch: 'docs/eyecatch/webp/chronicle.webp',
+
+      color: '#e8729a',
+      colorLight: '#fce4ec',
+      appName: 'Owlia-Plugins',
+      appDesc: 'VSCode等の開発環境にOwlia AIを直接統合。エディターから離れずにAI支援。',
+      link: null,
+      linkLabel: '準備中',
+    },
+    plugins: {
+      charName: 'コボ爺',
+      personality: 'レトロな丸メガネがトレードマークの職人気質なフクロウ。古き良きものの価値を知りつつ、新しい技術との橋渡しをするベテラン。',
+      eyecatch: 'docs/eyecatch/webp/plugins.webp',
+
+      color: '#f49833',
+      colorLight: '#fdecd2',
+      appName: 'Owlia-COBOL',
+      appDesc: 'VSCode風モダンUIでCOBOL開発をAI支援。日本語指示でコーディング＆AI校正。',
+      link: null,
+      linkLabel: '準備中',
+    },
+    owlia: {
+      charName: 'エリザベス',
+      personality: 'Owliaの優しき妹キャラ。みんなからエリちゃんと呼ばれている。温かく気配り上手で、仲間たちの力を借りながら、みんなの業務をアシスタントしている。',
+      eyecatch: 'docs/eyecatch/webp/owlia.webp',
+
+      color: '#f5c842',
+      colorLight: '#fef6d8',
+      appName: null,
+      appDesc: null,
+      link: null,
+      linkLabel: null,
+    },
+  };
+
+  var overlay = document.getElementById('owlModalOverlay');
+  var closeBtn = document.getElementById('owlModalClose');
+  var imgEl = document.getElementById('owlModalImg');
+  var heroArea = document.getElementById('owlModalHero');
+  var glowEl = document.getElementById('owlModalGlow');
+
+  var nameEl = document.getElementById('owlModalName');
+  var personalityEl = document.getElementById('owlModalPersonality');
+  var appCard = document.getElementById('owlModalAppCard');
+  var appNameEl = document.getElementById('owlModalAppName');
+  var appDescEl = document.getElementById('owlModalAppDesc');
+  var appCtaEl = document.getElementById('owlModalAppCta');
+  var heroScene = document.getElementById('heroScene');
+
+  if (!overlay || !hoverSystem || !heroScene) return;
+
+  function openModal(owlId) {
+    var p = OWL_PROFILES[owlId];
+    if (!p) return;
+
+    imgEl.src = p.eyecatch;
+    imgEl.alt = p.charName;
+    heroArea.style.background = 'linear-gradient(135deg, ' + p.colorLight + ' 0%, ' + p.colorLight + '88 50%, var(--white) 100%)';
+    glowEl.style.background = p.color;
+
+    nameEl.textContent = p.charName;
+    personalityEl.textContent = p.personality;
+
+    if (p.appName) {
+      appCard.style.display = '';
+      appNameEl.textContent = p.appName;
+      appDescEl.textContent = p.appDesc;
+      if (p.link) {
+        appCtaEl.innerHTML = '<a href="' + p.link + '" class="btn btn-teal btn-sm">' + p.linkLabel + '</a>';
+      } else {
+        appCtaEl.innerHTML = '<button class="btn btn-disabled btn-sm">' + p.linkLabel + '</button>';
+      }
+    } else {
+      appCard.style.display = 'none';
+    }
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  heroScene.addEventListener('click', function (e) {
+    var owlData = hoverSystem.owlData;
+    var isOpaqueAt = hoverSystem.isOpaqueAt;
+    for (var i = owlData.length - 1; i >= 0; i--) {
+      var od = owlData[i];
+      if (isOpaqueAt(od, e.clientX, e.clientY)) {
+        var owlId = od.el.dataset.owlId;
+        if (owlId) openModal(owlId);
+        return;
+      }
+    }
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+      closeModal();
+    }
   });
 }
 
