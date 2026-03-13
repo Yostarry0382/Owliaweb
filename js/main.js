@@ -139,6 +139,11 @@ function initSmoothScroll() {
    GSAP Animation System
    ======================================== */
 function initGSAP() {
+  // --- インタラクション（GSAP不要、常に実行） ---
+  const hoverSystem = initHeroOwlHover();
+  initOwlModal(hoverSystem);
+
+  // --- GSAPアニメーション（GSAP必須、reduced-motion尊重） ---
   if (typeof gsap === 'undefined') return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -149,8 +154,6 @@ function initGSAP() {
   const isMobile = window.innerWidth < 768;
 
   initHeroAnimations(isMobile);
-  const hoverSystem = initHeroOwlHover();
-  initOwlModal(hoverSystem);
   initParallax(isMobile);
   initTextAnimations();
   initCardHoverEffects();
