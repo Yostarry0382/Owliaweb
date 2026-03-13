@@ -278,6 +278,11 @@ function initHeroOwlHover() {
     } else {
       owl.addEventListener('load', () => {
         od.alphaMap = buildAlphaMap(owl);
+        // If alpha map now available, disable pointer-events for manual hit testing
+        if (od.alphaMap) {
+          od.el.style.pointerEvents = 'none';
+          od.el.style.cursor = '';
+        }
       }, { once: true });
     }
 
@@ -299,8 +304,15 @@ function initHeroOwlHover() {
     return od.alphaMap.data[idx] > 30;
   }
 
-  // Disable default pointer-events, we handle it manually
-  owls.forEach(owl => { owl.style.pointerEvents = 'none'; });
+  // Check if any alpha map was successfully built
+  var hasAlphaMap = owlData.some(od => od.alphaMap !== null);
+
+  // If no alpha maps available (e.g. file:// CORS), keep pointer-events on owls for direct click
+  if (hasAlphaMap) {
+    owls.forEach(owl => { owl.style.pointerEvents = 'none'; });
+  } else {
+    owls.forEach(owl => { owl.style.pointerEvents = 'auto'; owl.style.cursor = 'pointer'; });
+  }
 
   const heroScene = document.getElementById('heroScene');
   if (!heroScene) return;
@@ -333,7 +345,7 @@ function initHeroOwlHover() {
     heroScene.style.cursor = '';
   });
 
-  return { owlData, isOpaqueAt };
+  return { owlData, isOpaqueAt, hasAlphaMap: hasAlphaMap };
 }
 
 /* ----- Owl Character Modal ----- */
@@ -487,6 +499,16 @@ function initOwlModal(hoverSystem) {
       }
     }
   });
+
+  // Fallback: direct click on owl images (for file:// or CORS-restricted environments)
+  if (!hoverSystem.hasAlphaMap) {
+    heroScene.querySelectorAll('.hero-owl[data-owl-id]').forEach(function (owl) {
+      owl.addEventListener('click', function () {
+        var owlId = owl.dataset.owlId;
+        if (owlId) openModal(owlId);
+      });
+    });
+  }
 
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', function (e) {
