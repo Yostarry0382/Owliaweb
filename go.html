@@ -51,23 +51,14 @@
       var app = params.get('app') || '';
       var url = params.get('url') || '';
 
-      // Log click to localStorage
+      // Log click to server API
       if (app) {
         try {
-          var data = JSON.parse(localStorage.getItem('owlia_clicks') || '{}');
-          if (!data[app]) {
-            data[app] = { count: 0, clicks: [] };
-          }
-          data[app].count++;
-          data[app].clicks.push({
-            ts: Date.now(),
-            label: new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-          });
-          // Cap at 100 clicks per app
-          if (data[app].clicks.length > 100) {
-            data[app].clicks = data[app].clicks.slice(-100);
-          }
-          localStorage.setItem('owlia_clicks', JSON.stringify(data));
+          fetch('api/clicks.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ app: app }),
+          }).catch(function () {});
         } catch (e) {}
       }
 

@@ -4,6 +4,7 @@
    =================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  renderAllContent();
   initMobileMenu();
   initFadeIn();
   initAppFilter();
@@ -642,14 +643,12 @@ function initMarquee() {
    Akinator-style Quiz
    ======================================== */
 function initQuiz() {
-  const APPS = {
-    sprite:    { name: 'Owlia-Sprite',    role: 'デスクトップ常駐ランチャー', badge: 'available', icon: 'docs/character/transparent/sprite.webp', link: 'go.html?app=sprite&url=https://owlia-sprite.dairab.local', linkLabel: 'ダウンロード' },
-    portal:    { name: 'Owlia-Portal',    role: 'AIチャット・RAG',          badge: 'available', icon: 'docs/character/transparent/portal.webp', link: 'go.html?app=portal&url=https://owlia.dairab.local/portal', linkLabel: 'ログイン' },
-    grimoire:  { name: 'Owlia-Grimoire',  role: '開発者向けAPI',            badge: 'available', icon: 'docs/character/transparent/cobol.webp', link: 'go.html?app=grimoire&url=#', linkLabel: 'ドキュメント' },
-    cobol:     { name: 'Owlia-COBOL',     role: 'COBOL開発AI支援',          badge: 'coming',    icon: 'docs/character/transparent/plugins.webp', link: null, linkLabel: '準備中' },
-    chronicle: { name: 'Owlia-Chronicle', role: 'タスク管理・議事録',       badge: 'coming',    icon: 'docs/character/transparent/grimoire.webp', link: null, linkLabel: '準備中' },
-    plugins:   { name: 'Owlia-Plugins',   role: '開発環境AI統合',           badge: 'coming',    icon: 'docs/character/transparent/chronicle.webp', link: null, linkLabel: '準備中' },
-  };
+  var APPS = {};
+  if (OwliaContent && OwliaContent.apps) {
+    OwliaContent.apps.forEach(function(a) {
+      APPS[a.id] = { name: a.name, role: a.role, badge: a.badge, icon: a.icon, link: a.ctaLink, linkLabel: a.ctaLabel };
+    });
+  }
 
   var TOTAL_STEPS = 5;
 
