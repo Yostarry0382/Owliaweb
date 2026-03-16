@@ -700,6 +700,24 @@ img { max-width: 100%; display: block; }
 .cb-bubble-bot:hover .cb-copy { opacity: 1; }
 .cb-copy:hover { background: var(--gray-200); }
 
+/* Markdown rendering inside bot bubbles */
+.cb-bubble-bot p { margin: 0 0 8px 0; line-height: 1.7; }
+.cb-bubble-bot p:last-child { margin-bottom: 0; }
+.cb-bubble-bot ul, .cb-bubble-bot ol { margin: 4px 0 8px 0; padding-left: 20px; }
+.cb-bubble-bot li { margin-bottom: 2px; line-height: 1.6; }
+.cb-bubble-bot h1, .cb-bubble-bot h2, .cb-bubble-bot h3, .cb-bubble-bot h4 { margin: 8px 0 4px 0; font-weight: 700; }
+.cb-bubble-bot h1 { font-size: 1.15em; }
+.cb-bubble-bot h2 { font-size: 1.1em; }
+.cb-bubble-bot h3 { font-size: 1.05em; }
+.cb-bubble-bot code { background: var(--gray-200); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+.cb-bubble-bot pre { background: var(--gray-800); color: var(--gray-50); padding: 10px 12px; border-radius: 8px; overflow-x: auto; margin: 6px 0; }
+.cb-bubble-bot pre code { background: none; padding: 0; color: inherit; }
+.cb-bubble-bot a { color: var(--teal); text-decoration: underline; }
+.cb-bubble-bot table { border-collapse: collapse; margin: 6px 0; font-size: 0.9em; }
+.cb-bubble-bot th, .cb-bubble-bot td { border: 1px solid var(--gray-300); padding: 4px 8px; }
+.cb-bubble-bot th { background: var(--gray-100); font-weight: 700; }
+.cb-bubble-bot blockquote { border-left: 3px solid var(--teal); margin: 6px 0; padding: 2px 10px; color: var(--gray-600); }
+
 /* Quick chips */
 .chatbot-chips {
   padding: 8px 12px;
