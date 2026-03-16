@@ -918,7 +918,9 @@ function initQuiz() {
    ======================================== */
 function initChatbot() {
   // --- Config ---
-  const API_URL = 'api/chat.php';
+  const API_URL = 'http://10.2.230.40:1008/v1/chat/completions';
+  const API_KEY = '0SGsAMTLZ_sz5dZmZjmQJ-QF8PxXZ_V3-Cd4-rEwWD0';
+  const API_MODEL = 'asst_FRMFmGpVHIdT6Qk3yPJHbZD3';
   const SYSTEM_PROMPT = `<identity>
 あなたはOwliaアプリのアシスタントの「エリちゃん」です。
 ユーザーがAIで実現したいことを聞いて、最適なOwliaアプリを紹介します。
@@ -1085,20 +1087,6 @@ Owliaとは: NIT社内専用の生成AIプラットフォームです。社内�
     return [mapped[0], ...mapped.slice(-12)];
   }
 
-  // --- Fetch with retry ---
-  async function fetchWithRetry(url, options, retries = 2, delay = 1000) {
-    for (let i = 0; i <= retries; i++) {
-      try {
-        const res = await fetch(url, options);
-        if (res.ok) return res;
-        if (i < retries) await new Promise(r => setTimeout(r, delay));
-      } catch (err) {
-        if (i === retries) throw err;
-        await new Promise(r => setTimeout(r, delay));
-      }
-    }
-  }
-
   // --- API call ---
   async function send(text) {
     const txt = (text || inputEl.value).trim();
@@ -1124,104 +1112,75 @@ Owliaとは: NIT社内専用の生成AIプラットフォームです。社内�
         messages.push({ role: 'assistant', id: uid(), content: chipCache.get(txt) });
       } else {
         const history = buildHistory();
-        // Build messages array with system prompt as first message
-        const apiMessages = [
-          { role: 'system', content: SYSTEM_PROMPT },
-          ...history.map(m => ({
-            role: m.role,
-            content: m.content,
-            ...(m.role === 'user' ? { image_list: [], is_exclude: true } : {}),
-          })),
-        ];
+        const apiMessages = history.map(m => ({ role: m.role, content: m.content }));
 
         const reqBody = {
-          is_streaming: true,
+          model: API_MODEL,
           messages: apiMessages,
-          model: 'gpt-4o',
-          temperature: 0.7,
-          top_p: 0.9,
-          chat_id: 'personal',
+          provider: 'azure_agents',
+          stream: true,
         };
 
-        // Try streaming first
-        let streamed = false;
-        try {
-          const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(reqBody),
-          });
-          console.log('[Chatbot] Response status:', res.status, res.statusText);
-          if (!res.ok) {
-            const errText = await res.text();
-            console.error('[Chatbot] API error response:', errText);
-          }
-          if (res.ok && res.body) {
-            streamed = true;
-            const botMsg = { role: 'assistant', id: uid(), content: '' };
-            messages.push(botMsg);
-            loading = false;
-            renderMessages();
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': API_KEY,
+          },
+          body: JSON.stringify(reqBody),
+        });
 
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            let buffer = '';
+        console.log('[Chatbot] Response status:', res.status, res.statusText);
 
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              buffer += decoder.decode(value, { stream: true });
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error('[Chatbot] API error response:', errText);
+          throw new Error(`API error: ${res.status}`);
+        }
 
-              const lines = buffer.split('\n');
-              buffer = lines.pop() || '';
+        const botMsg = { role: 'assistant', id: uid(), content: '' };
+        messages.push(botMsg);
+        loading = false;
+        renderMessages();
 
-              for (const line of lines) {
-                if (!line.startsWith('data: ')) continue;
-                const data = line.slice(6).trim();
-                if (data === '[DONE]') continue;
-                try {
-                  const parsed = JSON.parse(data);
-                  // Support both OpenAI-compatible and Anthropic SSE formats
-                  const delta = parsed.choices?.[0]?.delta?.content
-                    || parsed.delta?.text
-                    || '';
-                  if (delta) {
-                    botMsg.content += delta;
-                    // Update only the last bot bubble
-                    const bubbles = messagesEl.querySelectorAll('.cb-bubble-bot');
-                    const lastBubble = bubbles[bubbles.length - 1];
-                    if (lastBubble) {
-                      const copyBtn = lastBubble.querySelector('.cb-copy');
-                      const copyHtml = copyBtn ? copyBtn.outerHTML : '';
-                      lastBubble.innerHTML = copyHtml + formatBotMessage(botMsg.content);
-                    }
-                    messagesEl.scrollTop = messagesEl.scrollHeight;
-                  }
-                } catch {}
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(data);
+              const delta = parsed.choices?.[0]?.delta?.content
+                || parsed.delta?.text
+                || '';
+              if (delta) {
+                botMsg.content += delta;
+                // Update only the last bot bubble
+                const bubbles = messagesEl.querySelectorAll('.cb-bubble-bot');
+                const lastBubble = bubbles[bubbles.length - 1];
+                if (lastBubble) {
+                  const copyBtn = lastBubble.querySelector('.cb-copy');
+                  const copyHtml = copyBtn ? copyBtn.outerHTML : '';
+                  lastBubble.innerHTML = copyHtml + formatBotMessage(botMsg.content);
+                }
+                messagesEl.scrollTop = messagesEl.scrollHeight;
               }
-            }
-            // Cache quick chip responses
-            if (QUICK_CHIPS.includes(txt)) chipCache.set(txt, botMsg.content);
+            } catch {}
           }
-        } catch (streamErr) {
-          console.error('[Chatbot] Streaming error:', streamErr);
         }
-
-        // Fallback to non-streaming
-        if (!streamed) {
-          const fallbackBody = { ...reqBody, is_streaming: false };
-          const res = await fetchWithRetry(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(fallbackBody),
-          });
-          const data = await res.json();
-          const reply = data.choices?.[0]?.message?.content
-            || data.content?.[0]?.text
-            || '申し訳ありません、回答できませんでした。';
-          messages.push({ role: 'assistant', id: uid(), content: reply });
-          if (QUICK_CHIPS.includes(txt)) chipCache.set(txt, reply);
-        }
+        // Cache quick chip responses
+        if (QUICK_CHIPS.includes(txt)) chipCache.set(txt, botMsg.content);
       }
     } catch (err) {
       console.error('[Chatbot] Fatal error:', err);
